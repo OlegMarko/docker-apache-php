@@ -8,9 +8,19 @@ services:
     ports:
       - 8090:80
       - 8043:443
+    depends_on:
+      - dsk_redis
+      - dsk_db
     volumes:
       - ../dsk:/var/www/html
       - ./php/php.ini:/usr/local/etc/php/php.ini
+  dsk_redis:
+    container_name: laravel-redis
+    image: redis:4-alpine
+    ports:
+      - 16379:6379
+    volumes:
+      - redis:/data
   dsk_db:
     image: mariadb:10.1.48
     restart: always
@@ -24,3 +34,6 @@ services:
     volumes:
       - ./mysql/my.cnf:/etc/mysql/my.cnf
       - ./db:/var/lib/mysql
+volumes:
+  redis:
+    driver: "local"
